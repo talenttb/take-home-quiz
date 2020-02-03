@@ -10,6 +10,7 @@ flask = "*"
 gunicorn = "*"
 python-dotenv = "*"
 bumpversion = "*"
+flask-script = "*"
 
 [requires]
 python_version = "3.8"
