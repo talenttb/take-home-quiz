@@ -28,7 +28,7 @@ pipenv install --dev
 
 # Run
 ```bash
-python run.py
+python run.py server
 ```
 
 # Test
@@ -37,6 +37,16 @@ pytest
 ```
 
 # Document
+
+## db
+```sql
+CREATE TABLE public.url_mapping (
+	short_url varchar(8) NOT NULL,
+	original_url text NOT NULL,
+	created_at timestamptz NOT NULL,
+	expired_at timestamptz NOT NULL
+);
+```
 
 # Cheatsheet
 
@@ -49,4 +59,10 @@ docker run -it --rm -p 5000:5000 quiz2-img
 ```
 ```bash
 docker-compose build
+```
+
+### if mac os get clang error:
+```bash
+export LDFLAGS="-L/usr/local/opt/openssl/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl/include"
 ```

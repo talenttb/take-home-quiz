@@ -8,4 +8,4 @@ RUN pip install pipenv && pipenv install --dev \
     && pip install --requirement /app/requirements.txt
 
 COPY . /app
-CMD ["python", "/app/run.py"]
+CMD ["python", "/app/run.py","server"]
