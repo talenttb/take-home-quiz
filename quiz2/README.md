@@ -12,11 +12,16 @@ I will collect data on the page just returned to the client. The steps like 1. c
 1. technology and architecture
 I will use the postgresql as our database, redis as cache service, and rabbitmq as message queue, because it is easier in one docker file for presentation. In real world, I will choose kafka as my message queue service.
 
-# Required
+
+# Set up
+### Required
+* docker
+
+### Optional
 * python
 * [pyenv](https://github.com/pyenv/pyenv#installation)
 
-# Set up
+
 ```bash
 pipenv install --dev
 ```
@@ -32,3 +37,16 @@ pytest
 ```
 
 # Document
+
+# Cheatsheet
+
+## docker
+```bash
+docker build -t quiz2-img:$(cat VERSION) .
+```
+```bash
+docker run -it --rm -p 5000:5000 quiz2-img
+```
+```bash
+docker-compose build
+```

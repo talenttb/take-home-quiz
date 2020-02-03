@@ -8,12 +8,7 @@ from flask import jsonify
 # from app.view_model import ma
 # from flask_apispec import use_kwargs, marshal_with
 
-# root = Blueprint('root', '__name__')
 short_url = Blueprint('short_url', __name__)
-
-
-def bp():
-    return short_url
 
 
 @short_url.route('/')

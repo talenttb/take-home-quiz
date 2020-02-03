@@ -1,10 +1,11 @@
-FROM python:3.8.1
+FROM python:3.8
+WORKDIR /app
+COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
 
-WORKDIR /src
-ENV FLASK_APP app.py
-ENV FLASK_RUN_HOST 0.0.0.0
-RUN apk add --no-cache gcc musl-dev linux-headers
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["flask", "run"]
+RUN pip install pipenv && pipenv install --dev \
+    && pipenv lock -r > requirements.txt \
+    && pip install --requirement /app/requirements.txt
+
+COPY . /app
+CMD ["python", "/app/run.py"]
