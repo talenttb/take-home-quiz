@@ -1,3 +1,4 @@
+from app.cache import redis_srv
 import logging
 from flask import Blueprint, jsonify
 from app.service import short_url as short_url_service
@@ -23,6 +24,13 @@ def short_url_root():
     return jsonify({'test': 'ok'})
 
 
+@short_url.route('/urls/<u>')
+def get_short_url(u):
+    ori_url = redis_srv.get(u)
+    logger.info(ori_url)
+    return jsonify({'r': ori_url})
+
+
 @short_url.route('/urls', methods=['POST'])
 def create_short_url():
     logger.info(request.json['original'])
@@ -30,9 +38,11 @@ def create_short_url():
     now = pendulum.now()
     for i in range(2):
         short_url = short_url_service.gen_rdm_base_str()
-        short_url = 'zRQw6934'
+
         if short_url_model.save_url_mapping(
                 short_url, original_url, now, now.add(days=150)):
+
+            redis_srv.set(short_url, original_url, 150*24*60*60)
             return jsonify({'original_url': original_url,
                             'short_url': short_url,
                             'expired_at': now.add(days=150)

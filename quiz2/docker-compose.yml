@@ -7,6 +7,10 @@ services:
       - "5000:5000"
   redis:
     image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
   postgres:
     image: postgres:12.0
     ports:
