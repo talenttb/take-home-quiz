@@ -17,6 +17,23 @@ I will use the postgresql as our database, redis as cache service, and rabbitmq 
 ### Required
 * docker
 
+#### steps
+```bash
+cp .env.example .env
+```
+```bash
+cat VERSION
+#edit .env
+#replace config (include PRJ_VERSION with VERSION)
+```
+```bash
+docker-compose build
+docker-compose up
+
+### without docker
+python run.py server
+```
+
 ### Optional
 * python
 * [pyenv](https://github.com/pyenv/pyenv#installation)
@@ -24,11 +41,6 @@ I will use the postgresql as our database, redis as cache service, and rabbitmq 
 
 ```bash
 pipenv install --dev
-```
-
-# Run
-```bash
-python run.py server
 ```
 
 # Test
@@ -40,11 +52,16 @@ pytest
 
 ## db
 ```sql
+-- Drop table
+
+-- DROP TABLE public.url_mapping;
+
 CREATE TABLE public.url_mapping (
 	short_url varchar(8) NOT NULL,
 	original_url text NOT NULL,
 	created_at timestamptz NOT NULL,
-	expired_at timestamptz NOT NULL
+	expired_at timestamptz NOT NULL,
+	CONSTRAINT url_mapping_pk PRIMARY KEY (short_url)
 );
 ```
 

@@ -1,0 +1,9 @@
+POST http://127.0.0.1:5000/urls
+content-type: application/json
+
+{"original":"http://test.com"}
+
+###
+
+GET http://127.0.0.1:5000/
+content-type: application/json
