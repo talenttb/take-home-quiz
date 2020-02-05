@@ -1,9 +1,11 @@
 from app.cache import redis_srv
 import logging
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, render_template
 from app.service import short_url as short_url_service
 from flask import request
 import time
+import uuid
+import os
 import pendulum
 from app.model import short_url as short_url_model
 short_url = Blueprint('short_url', __name__)
@@ -13,22 +15,23 @@ logger = logging.getLogger(__name__)
 @short_url.route('/')
 def short_url_root():
     logger.info('in short url root')
-    # with get_conn() as conn:
-    #     cur = conn.cursor()
-    #     cur.execute('SELECT version()')
-    #     cursor.execute(
-    #         "INSERT INTO url_mapping (c1, c2, c3) VALUES(%s, %s, %s)", (v1, v2, v3))
-    #     version = cur.fetchone()[0]
-    #     logger.info(version)
 
     return jsonify({'test': 'ok'})
 
 
-@short_url.route('/urls/<u>')
-def get_short_url(u):
+@short_url.route('/<u>')
+def convert_short_url(u):
     ori_url = redis_srv.get(u)
-    logger.info(ori_url)
-    return jsonify({'r': ori_url})
+    logger.debug(ori_url)
+    identity = uuid.uuid5(uuid.NAMESPACE_DNS, 'redirect_tracing')
+    d = {
+        'ori_url': ori_url,
+        'short_url': u,
+        'identity': identity,
+        'log_url': f'{os.environ.get("SERVER_HOST")}/logs/{u}/{identity}',
+    }
+
+    return render_template('redirect.html', data=d)
 
 
 @short_url.route('/urls', methods=['POST'])

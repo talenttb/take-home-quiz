@@ -13,6 +13,8 @@ def create_app(config_name):
     register_logging(app)
     from app.views.short_url import short_url
     app.register_blueprint(short_url)
+    from app.views.req_log import req_log
+    app.register_blueprint(req_log)
     app.logger.info(f'Project version: {os.getenv("PRJ_VERSION")}')
     return app
 

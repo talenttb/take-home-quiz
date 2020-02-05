@@ -11,11 +11,11 @@ req_log = Blueprint('req_log', __name__)
 logger = logging.getLogger(__name__)
 
 
-@req_log.route('/logs/<identity>', methods=['POST'])
-def collect_logs(identity):
+@req_log.route('/logs/<short_url>/<identity>', methods=['POST'])
+def collect_logs(short_url, identity):
     logger.info(request.json['data'])
     data = request.json['data']
     # TODO
     # should use async task
-    req_log_model.save_req_logs(identity, data)
+    req_log_model.save_req_logs(short_url, identity, data)
     return jsonify({}), 200

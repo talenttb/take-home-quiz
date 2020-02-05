@@ -1,25 +1,25 @@
 from app.model.db import get_conn
 from psycopg2 import sql, DatabaseError, IntegrityError
+import pendulum
+import json
 import logging
 logger = logging.getLogger(__name__)
 
 
-def save_req_logs(data):
+def save_req_logs(short_url, identity, data):
     with get_conn() as conn:
         with conn.cursor() as cur:
             insert_sql = """
             INSERT INTO req_logs
-            (identity, data, created_at)
-            VALUES(%s, %s, %s)
+            (identity,short_url, user_data, created_at)
+            VALUES(%s,%s, %s, %s)
             """
             try:
                 cur.execute(
                     sql.SQL(insert_sql),
-                    [short_url, ori_url, created_at, expired_at]
+                    [identity, short_url, json.dumps(data), pendulum.now()]
                 )
-            except IntegrityError as error:
-                if 'duplicate key' in str(error):
-                    logger.info('handle duplicate error')
+            except DatabaseError as error:
                 logger.error(error)
                 conn.rollback()
                 return False

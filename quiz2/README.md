@@ -49,6 +49,55 @@ pytest
 ```
 
 # Document
+## create short url
+```bash
+curl --request POST \
+  --url http://127.0.0.1:5000/urls \
+  --header 'content-type: application/json' \
+  --data '{"original":"http://test.com"}'
+
+###
+{
+  "expired_at": "Fri, 03 Jul 2020 07:22:00 GMT",
+  "original_url": "http://test.com",
+  "short_url": "hddKfMAN"
+}
+```
+
+## convert short url to original url
+```bash
+curl --request GET \
+  --url http://127.0.0.1:5000/{short url}
+
+###
+<html>
+
+<head>
+    <title>Redirecting...</title>
+	...
+	<script>
+        var data = {"identity": "426eb752-5afc-5cdb-9dae-8a81712869e2", "log_url": "http://127.0.0.1:5000/logs/TMjybPTK/426eb752-5afc-5cdb-9dae-8a81712869e2", "ori_url": "http://google.com", "short_url": "TMjybPTK"};
+        console.table(data);
+
+		......
+		window.location = data.ori_url;
+
+    </script>
+</html>
+```
+
+## collect request logs
+```bash
+curl --request POST \
+  --url http://127.0.0.1:5000/logs/{u}/{identity} \
+  --header 'content-type: application/json' \
+  --data '{"data":{.........}}'
+
+###
+status: 200
+{}
+```
+
 
 ## db
 ```sql
@@ -62,6 +111,18 @@ CREATE TABLE public.url_mapping (
 	created_at timestamptz NOT NULL,
 	expired_at timestamptz NOT NULL,
 	CONSTRAINT url_mapping_pk PRIMARY KEY (short_url)
+);
+
+-- Drop table
+
+-- DROP TABLE public.req_logs;
+
+CREATE TABLE public.req_logs (
+	"identity" uuid NOT NULL,
+	user_data json NOT NULL,
+	created_at timestamptz NOT NULL,
+	short_url varchar(8) NULL,
+	CONSTRAINT req_logs_un UNIQUE (identity, short_url)
 );
 ```
 

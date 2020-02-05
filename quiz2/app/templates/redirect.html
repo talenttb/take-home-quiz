@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <!-- <p>{{data}}</p> -->
+    {% block javascript %}
+
+    <script>
+        var data = {{ data| tojson}};
+        console.table(data);
+
+        user_data = {
+            's_w': screen.width,
+            's_h': screen.height
+        };
+        fetch(data.log_url, {
+            body: JSON.stringify({ 'data': user_data }),
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST'
+        })
+            .then(function (response) {
+                window.location = data.ori_url;
+            });
+    </script>
+
+    {% endblock %}
+</body>
+
+</html>
