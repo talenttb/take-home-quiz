@@ -23,12 +23,12 @@ def short_url_root():
 def convert_short_url(u):
     ori_url = redis_srv.get(u)
     logger.debug(ori_url)
-    identity = uuid.uuid5(uuid.NAMESPACE_DNS, 'redirect_tracing')
+    req_id = uuid.uuid4()
     d = {
         'ori_url': ori_url,
         'short_url': u,
-        'identity': identity,
-        'log_url': f'{os.environ.get("SERVER_HOST")}/logs/{u}/{identity}',
+        'req_id': req_id,
+        'log_url': f'{os.environ.get("SERVER_HOST")}/logs/{u}/{req_id}',
     }
 
     return render_template('redirect.html', data=d)

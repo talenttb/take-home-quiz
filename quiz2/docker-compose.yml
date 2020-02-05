@@ -5,6 +5,16 @@ services:
     image: webapp:${PRJ_VERSION}
     ports:
       - "5000:5000"
+  worker:
+    build: .
+    image: webapp:${PRJ_VERSION}
+    command:
+      - celery
+      - -A
+      - app
+      - worker
+      - -l
+      - info
   redis:
     image: "redis:alpine"
     ports:
@@ -17,5 +27,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
 volumes:
   postgres-data: {}
